@@ -5,8 +5,8 @@ var chai = require('chai');
 var should = chai.should();
 var expect = chai.expect;
 
-var digibyte = require('../..');
-var UnspentOutput = digibyte.Transaction.UnspentOutput;
+var but = require('../..');
+var UnspentOutput = but.Transaction.UnspentOutput;
 
 describe('UnspentOutput', function() {
 

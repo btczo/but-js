@@ -5,13 +5,13 @@ var should = require('chai').should();
 var expect = require('chai').expect;
 var _ = require('lodash');
 
-var digibyte = require('../../..');
-var Transaction = digibyte.Transaction;
-var PrivateKey = digibyte.PrivateKey;
-var Address = digibyte.Address;
-var Script = digibyte.Script;
-var Signature = digibyte.crypto.Signature;
-var MultiSigInput = digibyte.Transaction.Input.MultiSig;
+var but = require('../../..');
+var Transaction = but.Transaction;
+var PrivateKey = but.PrivateKey;
+var Address = but.Address;
+var Script = but.Script;
+var Signature = but.crypto.Signature;
+var MultiSigInput = but.Transaction.Input.MultiSig;
 
 describe('MultiSigInput', function() {
 

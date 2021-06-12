@@ -3,13 +3,13 @@
 var should = require('chai').should();
 var expect = require('chai').expect;
 
-var digibyte = require('..');
-var Point = digibyte.crypto.Point;
-var BN = digibyte.crypto.BN;
-var PublicKey = digibyte.PublicKey;
-var PrivateKey = digibyte.PrivateKey;
-var Address = digibyte.Address;
-var Networks = digibyte.Networks;
+var but = require('..');
+var Point = but.crypto.Point;
+var BN = but.crypto.BN;
+var PublicKey = but.PublicKey;
+var PrivateKey = but.PrivateKey;
+var Address = but.Address;
+var Networks = but.Networks;
 
 /* jshint maxlen: 200 */
 

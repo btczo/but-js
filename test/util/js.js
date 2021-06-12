@@ -4,8 +4,8 @@
 var should = require('chai').should();
 var expect = require('chai').expect;
 
-var digibyte = require('../..');
-var JSUtil = digibyte.util.js;
+var but = require('../..');
+var JSUtil = but.util.js;
 
 describe('js utils', function() {
 

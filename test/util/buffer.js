@@ -4,9 +4,9 @@
 var should = require('chai').should();
 var expect = require('chai').expect;
 
-var digibyte = require('../..');
-var errors = digibyte.errors;
-var BufferUtil = digibyte.util.buffer;
+var but = require('../..');
+var errors = but.errors;
+var BufferUtil = but.util.buffer;
 
 describe('buffer utils', function() {
 

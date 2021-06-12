@@ -2,11 +2,11 @@
 
 var should = require('chai').should();
 
-var digibyte = require('../..');
-var MerkleBlock = digibyte.MerkleBlock;
-var BufferReader = digibyte.encoding.BufferReader;
-var BufferWriter = digibyte.encoding.BufferWriter;
-var Transaction = digibyte.Transaction;
+var but = require('../..');
+var MerkleBlock = but.MerkleBlock;
+var BufferReader = but.encoding.BufferReader;
+var BufferWriter = but.encoding.BufferWriter;
+var Transaction = but.Transaction;
 var data = require('../data/merkleblocks.js');
 var transactionVector = require('../data/tx_creation');
 

@@ -2,14 +2,14 @@
 
 var should = require('chai').should();
 var sinon = require('sinon');
-var digibyte = require('../..');
-var Interpreter = digibyte.Script.Interpreter;
-var Transaction = digibyte.Transaction;
-var PrivateKey = digibyte.PrivateKey;
-var Script = digibyte.Script;
-var BN = digibyte.crypto.BN;
-var BufferWriter = digibyte.encoding.BufferWriter;
-var Opcode = digibyte.Opcode;
+var but = require('../..');
+var Interpreter = but.Script.Interpreter;
+var Transaction = but.Transaction;
+var PrivateKey = but.PrivateKey;
+var Script = but.Script;
+var BN = but.crypto.BN;
+var BufferWriter = but.encoding.BufferWriter;
+var Opcode = but.Opcode;
 var _ = require('lodash');
 
 var script_valid = require('../data/bitcoind/script_valid');
@@ -17,7 +17,7 @@ var script_invalid = require('../data/bitcoind/script_invalid');
 var tx_valid = require('../data/bitcoind/tx_valid');
 var tx_invalid = require('../data/bitcoind/tx_invalid');
 
-//the script string format used in digibyted data tests
+//the script string format used in butd data tests
 Script.fromDigiBytedString = function(str) {
   var bw = new BufferWriter();
   var tokens = str.split(' ');
@@ -336,7 +336,7 @@ describe('Interpreter', function() {
     var verified = interp.verify(scriptSig, scriptPubkey, spendtx, 0, flags);
     verified.should.equal(expected);
   };
-  describe('digibyted script evaluation fixtures', function() {
+  describe('butd script evaluation fixtures', function() {
     var testAllFixtures = function(set, expected) {
       var c = 0;
       set.forEach(function(vector) {
@@ -358,7 +358,7 @@ describe('Interpreter', function() {
     testAllFixtures(script_invalid, false);
 
   });
-  describe('digibyted transaction evaluation fixtures', function() {
+  describe('butd transaction evaluation fixtures', function() {
     var test_txs = function(set, expected) {
       var c = 0;
       set.forEach(function(vector) {
@@ -378,7 +378,7 @@ describe('Interpreter', function() {
             var txoutnum = input[1];
             var scriptPubKeyStr = input[2];
             if (txoutnum === -1) {
-              txoutnum = 0xffffffff; //digibyted casts -1 to an unsigned int
+              txoutnum = 0xffffffff; //butd casts -1 to an unsigned int
             }
             map[txid + ':' + txoutnum] = Script.fromDigiBytedString(scriptPubKeyStr);
           });

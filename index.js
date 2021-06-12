@@ -1,73 +1,73 @@
 'use strict';
 
-var digibyte = module.exports;
+var but = module.exports;
 
 // module information
-digibyte.version = 'v' + require('./package.json').version;
-digibyte.versionGuard = function(version) {
+but.version = 'v' + require('./package.json').version;
+but.versionGuard = function(version) {
   if (version !== undefined) {
-    var message = 'More than one instance of digibyte found. ' +
-      'Please make sure to require digibyte and check that submodules do' +
-      ' not also include their own digibyte dependency.';
+    var message = 'More than one instance of but found. ' +
+      'Please make sure to require but and check that submodules do' +
+      ' not also include their own but dependency.';
     throw new Error(message);
   }
 };
-digibyte.versionGuard(global._digibyte);
-global._digibyte = digibyte.version;
+but.versionGuard(global._but);
+global._but = but.version;
 
 // crypto
-digibyte.crypto = {};
-digibyte.crypto.BN = require('./lib/crypto/bn');
-digibyte.crypto.ECDSA = require('./lib/crypto/ecdsa');
-digibyte.crypto.Hash = require('./lib/crypto/hash');
-digibyte.crypto.Random = require('./lib/crypto/random');
-digibyte.crypto.Point = require('./lib/crypto/point');
-digibyte.crypto.Signature = require('./lib/crypto/signature');
+but.crypto = {};
+but.crypto.BN = require('./lib/crypto/bn');
+but.crypto.ECDSA = require('./lib/crypto/ecdsa');
+but.crypto.Hash = require('./lib/crypto/hash');
+but.crypto.Random = require('./lib/crypto/random');
+but.crypto.Point = require('./lib/crypto/point');
+but.crypto.Signature = require('./lib/crypto/signature');
 
 // encoding
-digibyte.encoding = {};
-digibyte.encoding.bech32 = require('./lib/encoding/bech32');
-digibyte.encoding.bech32Check = require('./lib/encoding/bech32check');
-digibyte.encoding.Base58 = require('./lib/encoding/base58');
-digibyte.encoding.Base58Check = require('./lib/encoding/base58check');
-digibyte.encoding.BufferReader = require('./lib/encoding/bufferreader');
-digibyte.encoding.BufferWriter = require('./lib/encoding/bufferwriter');
-digibyte.encoding.Varint = require('./lib/encoding/varint');
+but.encoding = {};
+but.encoding.bech32 = require('./lib/encoding/bech32');
+but.encoding.bech32Check = require('./lib/encoding/bech32check');
+but.encoding.Base58 = require('./lib/encoding/base58');
+but.encoding.Base58Check = require('./lib/encoding/base58check');
+but.encoding.BufferReader = require('./lib/encoding/bufferreader');
+but.encoding.BufferWriter = require('./lib/encoding/bufferwriter');
+but.encoding.Varint = require('./lib/encoding/varint');
 
 // utilities
-digibyte.util = {};
-digibyte.util.assets = require('./lib/util/assets');
-digibyte.util.buffer = require('./lib/util/buffer');
-digibyte.util.js = require('./lib/util/js');
-digibyte.util.preconditions = require('./lib/util/preconditions');
+but.util = {};
+but.util.assets = require('./lib/util/assets');
+but.util.buffer = require('./lib/util/buffer');
+but.util.js = require('./lib/util/js');
+but.util.preconditions = require('./lib/util/preconditions');
 
 // errors thrown by the library
-digibyte.errors = require('./lib/errors');
+but.errors = require('./lib/errors');
 
-// main digibyte library
-digibyte.Asset = require('./lib/asset');
-digibyte.Address = require('./lib/address');
-digibyte.Block = require('./lib/block');
-digibyte.MerkleBlock = require('./lib/block/merkleblock');
-digibyte.BlockHeader = require('./lib/block/blockheader');
-digibyte.HDPrivateKey = require('./lib/hdprivatekey.js');
-digibyte.HDPublicKey = require('./lib/hdpublickey.js');
-digibyte.Networks = require('./lib/networks');
-digibyte.Opcode = require('./lib/opcode');
-digibyte.PrivateKey = require('./lib/privatekey');
-digibyte.PublicKey = require('./lib/publickey');
-digibyte.Script = require('./lib/script');
-digibyte.Transaction = require('./lib/transaction');
-digibyte.URI = require('./lib/uri');
-digibyte.Unit = require('./lib/unit');
+// main but library
+but.Asset = require('./lib/asset');
+but.Address = require('./lib/address');
+but.Block = require('./lib/block');
+but.MerkleBlock = require('./lib/block/merkleblock');
+but.BlockHeader = require('./lib/block/blockheader');
+but.HDPrivateKey = require('./lib/hdprivatekey.js');
+but.HDPublicKey = require('./lib/hdpublickey.js');
+but.Networks = require('./lib/networks');
+but.Opcode = require('./lib/opcode');
+but.PrivateKey = require('./lib/privatekey');
+but.PublicKey = require('./lib/publickey');
+but.Script = require('./lib/script');
+but.Transaction = require('./lib/transaction');
+but.URI = require('./lib/uri');
+but.Unit = require('./lib/unit');
 
 // dependencies, subject to change
-digibyte.deps = {};
-digibyte.deps.bnjs = require('bn.js');
-digibyte.deps.bs58 = require('bs58');
-digibyte.deps.Buffer = Buffer;
-digibyte.deps.elliptic = require('elliptic');
-digibyte.deps._ = require('lodash');
+but.deps = {};
+but.deps.bnjs = require('bn.js');
+but.deps.bs58 = require('bs58');
+but.deps.Buffer = Buffer;
+but.deps.elliptic = require('elliptic');
+but.deps._ = require('lodash');
 
 // Internal usage, exposed for testing/advanced tweaking
-digibyte.Transaction.sighash = require('./lib/transaction/sighash');
+but.Transaction.sighash = require('./lib/transaction/sighash');

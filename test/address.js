@@ -6,11 +6,11 @@ var chai = require('chai');
 var should = chai.should();
 var expect = chai.expect;
 
-var digibyte = require('..');
-var PublicKey = digibyte.PublicKey;
-var Address = digibyte.Address;
-var Script = digibyte.Script;
-var Networks = digibyte.Networks;
+var but = require('..');
+var PublicKey = but.PublicKey;
+var Address = but.Address;
+var Script = but.Script;
+var Networks = but.Networks;
 
 var validbase58 = require('./data/bitcoind/base58_keys_valid.json');
 var invalidbase58 = require('./data/bitcoind/base58_keys_invalid.json');
@@ -39,7 +39,7 @@ describe('Address', function() {
     }).should.throw('Third argument must be "pubkeyhash", "scripthash", "witnesspubkeyhash", or "witnessscripthash"');
   });
 
-  describe('digibyted compliance', function() {
+  describe('butd compliance', function() {
     validbase58.map(function(d) {
       if (!d[2].isPrivkey) {
         it('should describe address ' + d[0] + ' as valid', function() {
@@ -85,35 +85,35 @@ describe('Address', function() {
   ];
 
   var P2WPKHLivenet = [
-    'dgb1qhv27ve0hs94kz3k8ywxwd6522y04pdud3lq74k',
-    'dgb1qathdq87kqpntyvd2lfre9ugm03n0wacs8y5ll6',
-    'dgb1q8f9qnl8uqy9wh6sja43h0qmhndf5x03xukfqs0',
-    'dgb1qs90y7xqcpv4cjy54e4pe8fgmu7aemlgc65q73g',
-    'dgbt1qjrn9t3w2wvayh2fc7nzcwynyjs06cr0ja4mesq'
+    'but1qhv27ve0hs94kz3k8ywxwd6522y04pdud3lq74k',
+    'but1qathdq87kqpntyvd2lfre9ugm03n0wacs8y5ll6',
+    'but1q8f9qnl8uqy9wh6sja43h0qmhndf5x03xukfqs0',
+    'but1qs90y7xqcpv4cjy54e4pe8fgmu7aemlgc65q73g',
+    'butt1qjrn9t3w2wvayh2fc7nzcwynyjs06cr0ja4mesq'
   ];
 
   var P2WSHLivenet = [
-    'dgb1q0taf98t6ku0e38dhf3chnt80kurpvkyphjw4eayg7fmwfn0l0mfsqca0qx',
-    'dgb1qg4p9x8jc5gxve8s8q45uq3sm9m4fq0xdfq0vz6x9rsermxg9et2q2u4ul3',
-    'dgb1qeqztplakpus3mhhqmnl7fwjvdgz8k357df0ftc9sejhmlhsej03q5y60e9',
-    'dgb1qkcrtx74pemlhhpagn08e0wnsyxpa9zrswf3lg82s7y83ya993y9s0khj29',
-    'dgb1qxsa7n4rk8tj33y8wjwpjedf7wvucc7t8rmcshr0gq2zc7gc6mt5q8avu63'
+    'but1q0taf98t6ku0e38dhf3chnt80kurpvkyphjw4eayg7fmwfn0l0mfsqca0qx',
+    'but1qg4p9x8jc5gxve8s8q45uq3sm9m4fq0xdfq0vz6x9rsermxg9et2q2u4ul3',
+    'but1qeqztplakpus3mhhqmnl7fwjvdgz8k357df0ftc9sejhmlhsej03q5y60e9',
+    'but1qkcrtx74pemlhhpagn08e0wnsyxpa9zrswf3lg82s7y83ya993y9s0khj29',
+    'but1qxsa7n4rk8tj33y8wjwpjedf7wvucc7t8rmcshr0gq2zc7gc6mt5q8avu63'
   ];
 
   var P2WPKHTestnet = [
-    'dgbt1qcyvjwnsl96uzfs95lu6whw2zwzcga5har0gufc',
-    'dgbt1qcssz9q2qkh3gzfsww8cjpz2hxnjkmn597mfkzm',
-    'dgbt1qlryp7ecxsjhq0z4n6dz5q7tq8gacqy50a86a0v',
-    'dgbt1qg6ndqavjv44m0m3shm2xurey38mv3xq0n07akw',
-    'dgbt1qnllsfzf7pkteasvce50wm8qdkx2syud8cqekv9'
+    'butt1qcyvjwnsl96uzfs95lu6whw2zwzcga5har0gufc',
+    'butt1qcssz9q2qkh3gzfsww8cjpz2hxnjkmn597mfkzm',
+    'butt1qlryp7ecxsjhq0z4n6dz5q7tq8gacqy50a86a0v',
+    'butt1qg6ndqavjv44m0m3shm2xurey38mv3xq0n07akw',
+    'butt1qnllsfzf7pkteasvce50wm8qdkx2syud8cqekv9'
   ];
 
   var P2WSHTestnet = [
-    'dgbt1qkqx4wnfjqmcdvz3sjr922jj6yk269e2ng2cfn5wkjwcu8vughevshgrs5r',
-    'dgbt1q29fydwxx89pe42ecl7huvcuu2pv4m4xfe8yxcckwhnk0nsfjhk7qk57qx4',
-    'dgbt1qv6ctp2utp499wh3j5as8krhgdd6l8nnqp2q9axleqrkasswlc8dqsjrk33',
-    'dgbt1qxyhj7xly09c26k5a6n5yl495ge4lsud65avgjlve4l7llxelmaaqzacg2a',
-    'dgbt1qh4h70arlhflq3sf3k7k7mg4cwc8ehscq3l5vnysuzml8fsydlafsj9j75f'
+    'butt1qkqx4wnfjqmcdvz3sjr922jj6yk269e2ng2cfn5wkjwcu8vughevshgrs5r',
+    'butt1q29fydwxx89pe42ecl7huvcuu2pv4m4xfe8yxcckwhnk0nsfjhk7qk57qx4',
+    'butt1qv6ctp2utp499wh3j5as8krhgdd6l8nnqp2q9axleqrkasswlc8dqsjrk33',
+    'butt1qxyhj7xly09c26k5a6n5yl495ge4lsud65avgjlve4l7llxelmaaqzacg2a',
+    'butt1qh4h70arlhflq3sf3k7k7mg4cwc8ehscq3l5vnysuzml8fsydlafsj9j75f'
   ];
 
   // testnet p2sh
@@ -313,7 +313,7 @@ describe('Address', function() {
     it('should error because of unrecognized data format', function() {
       (function() {
         return new Address(new Error());
-      }).should.throw(digibyte.errors.InvalidArgument);
+      }).should.throw(but.errors.InvalidArgument);
     });
 
     it('should error because of incorrect format for pubkey hash', function() {
@@ -516,7 +516,7 @@ describe('Address', function() {
     it('will fail with invalid state', function() {
       expect(function() {
         return Address.fromObject('¹');
-      }).to.throw(digibyte.errors.InvalidState);
+      }).to.throw(but.errors.InvalidState);
     });
   });
 

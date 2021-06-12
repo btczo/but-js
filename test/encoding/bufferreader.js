@@ -1,10 +1,10 @@
 'use strict';
 
 var should = require('chai').should();
-var digibyte = require('../..');
-var BufferWriter = digibyte.encoding.BufferWriter;
-var BufferReader = digibyte.encoding.BufferReader;
-var BN = digibyte.crypto.BN;
+var but = require('../..');
+var BufferWriter = but.encoding.BufferWriter;
+var BufferReader = but.encoding.BufferReader;
+var BN = but.crypto.BN;
 
 describe('BufferReader', function() {
 
@@ -190,7 +190,7 @@ describe('BufferReader', function() {
       br.readUInt64LEBN().toNumber().should.equal(1);
     });
 
-    it('should return 10DGB', function() {
+    it('should return 10BUT', function() {
       var tenbtc = 10 * 1e8;
       var tenbtcBuffer = new Buffer('00ca9a3b00000000', 'hex');
       var br = new BufferReader(tenbtcBuffer);

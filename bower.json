@@ -1,8 +1,8 @@
 {
-  "name": "digibyte",
-  "main": "./digibyte.min.js",
+  "name": "but",
+  "main": "./but.min.js",
   "version": "0.14.2",
-  "homepage": "http://digibyte.co",
+  "homepage": "http://but.co",
   "authors": [
     "BitPay, Inc."
   ],
@@ -12,8 +12,8 @@
   ],
   "keywords": [
     "bitcoin",
-    "digibyte",
-    "digibyte",
+    "but",
+    "but",
   ],
   "license": "MIT",
   "ignore": [

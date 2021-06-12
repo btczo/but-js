@@ -1,9 +1,9 @@
 'use strict';
 
 var should = require('chai').should();
-var digibyte = require('../../..');
-var Transaction = digibyte.Transaction;
-var PrivateKey = digibyte.PrivateKey;
+var but = require('../../..');
+var Transaction = but.Transaction;
+var PrivateKey = but.PrivateKey;
 
 describe('PublicKeyInput', function() {
 

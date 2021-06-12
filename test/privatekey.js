@@ -4,12 +4,12 @@ var chai = require('chai');
 var should = chai.should();
 var expect = chai.expect;
 
-var digibyte = require('..');
-var BN = digibyte.crypto.BN;
-var Point = digibyte.crypto.Point;
-var PrivateKey = digibyte.PrivateKey;
-var Networks = digibyte.Networks;
-var Base58Check = digibyte.encoding.Base58Check;
+var but = require('..');
+var BN = but.crypto.BN;
+var Point = but.crypto.Point;
+var PrivateKey = but.PrivateKey;
+var Networks = but.Networks;
+var Base58Check = but.encoding.Base58Check;
 
 var validbase58 = require('./data/bitcoind/base58_keys_valid.json');
 var invalidbase58 = require('./data/bitcoind/base58_keys_invalid.json');
@@ -88,7 +88,7 @@ describe('PrivateKey', function() {
     should.exist(a.bn);
   });
 
-  describe('digibyted compliance', function() {
+  describe('butd compliance', function() {
     validbase58.map(function(d){
       if (d[2].isPrivkey) {
         it('should instantiate WIF private key ' + d[0] + ' with correct properties', function() {

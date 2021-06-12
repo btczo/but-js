@@ -1,5 +1,5 @@
 
 
-var digibyteTasks = require('digibyte-build');
+var butTasks = require('but-build');
 
-digibyteTasks('lib');
+butTasks('lib');

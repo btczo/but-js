@@ -7,18 +7,18 @@ var expect = require('chai').expect;
 var _ = require('lodash');
 var sinon = require('sinon');
 
-var digibyte = require('../..');
-var BN = digibyte.crypto.BN;
-var Transaction = digibyte.Transaction;
-var Input = digibyte.Transaction.Input;
-var Output = digibyte.Transaction.Output;
-var PrivateKey = digibyte.PrivateKey;
-var Script = digibyte.Script;
-var Interpreter = digibyte.Script.Interpreter;
-var Address = digibyte.Address;
-var Networks = digibyte.Networks;
-var Opcode = digibyte.Opcode;
-var errors = digibyte.errors;
+var but = require('../..');
+var BN = but.crypto.BN;
+var Transaction = but.Transaction;
+var Input = but.Transaction.Input;
+var Output = but.Transaction.Output;
+var PrivateKey = but.PrivateKey;
+var Script = but.Script;
+var Interpreter = but.Script.Interpreter;
+var Address = but.Address;
+var Networks = but.Networks;
+var Opcode = but.Opcode;
+var errors = but.errors;
 
 var transactionVector = require('../data/tx_creation');
 
@@ -52,7 +52,7 @@ describe('Transaction', function() {
       'script': testScript,
       'satoshis': testAmount
     })
-    .to('dgbt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', testAmount - 10000);
+    .to('butt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', testAmount - 10000);
 
   it('can serialize to a plain javascript object', function() {
     var object = testTransaction.toObject();
@@ -65,7 +65,7 @@ describe('Transaction', function() {
 
   it('will not accept NaN as an amount', function() {
     (function() {
-      var stringTx = new Transaction().to('dgbt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', NaN);
+      var stringTx = new Transaction().to('butt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', NaN);
     }).should.throw('Amount is expected to be a positive integer');
   });
 
@@ -117,7 +117,7 @@ describe('Transaction', function() {
   });
 
   it('fromObject with pay-to-public-key previous outputs', function() {
-    var tx = digibyte.Transaction({
+    var tx = but.Transaction({
       hash: '132856bf03d6415562a556437d22ac63c37a4595fd986c796eb8e02dc031aa25',
       version: 1,
       inputs: [
@@ -145,7 +145,7 @@ describe('Transaction', function() {
       ],
       nLockTime: 139
     });
-    tx.inputs[0].should.be.instanceof(digibyte.Transaction.Input.PublicKey);
+    tx.inputs[0].should.be.instanceof(but.Transaction.Input.PublicKey);
     tx.inputs[0].output.satoshis.should.equal(5000000000);
     tx.inputs[0].output.script.toHex().should.equal('2103b1c65d65f1ff3fe145a4ede692460ae0606671d04e8449e99dd11c66ab55a7feac');
   });
@@ -200,7 +200,7 @@ describe('Transaction', function() {
 
   // TODO: Migrate this into a test for inputs
 
-  var fromAddress = 'dgbt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata';
+  var fromAddress = 'butt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata';
   var simpleUtxoWith100000Satoshis = {
     address: fromAddress,
     txId: 'a477af6b2667c29670467e4e0728b685ee07b240235771862318e29ddbe58458',
@@ -218,9 +218,9 @@ describe('Transaction', function() {
   };
   var anyoneCanSpendUTXO = JSON.parse(JSON.stringify(simpleUtxoWith100000Satoshis));
   anyoneCanSpendUTXO.script = new Script().add('OP_TRUE');
-  var toAddress = 'dgbt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata';
-  var changeAddress = 'dgbt1q9xj5ray8dan5cfq5gk6ejq5pywrsf7fm3dwyxu';
-  var changeAddressP2WSH = 'dgbt1qxw95r7g7h2ahf56rpmnmpfpw76lm3a6w3k9jnww8x82fs0epsfhqjmpnya';
+  var toAddress = 'butt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata';
+  var changeAddress = 'butt1q9xj5ray8dan5cfq5gk6ejq5pywrsf7fm3dwyxu';
+  var changeAddressP2WSH = 'butt1qxw95r7g7h2ahf56rpmnmpfpw76lm3a6w3k9jnww8x82fs0epsfhqjmpnya';
   var privateKey = 'eapjRKSpbpuezzEvQTN7pGjXgNTsN5xtTGQ999rQRixcv92L3Nmr';
   var private1 = '6ce7e97e317d2af16c33db0b9270ec047a91bff3eff8558afb5014afb2bb5976';
   var private2 = 'c9b26b0f771a0d2dad88a44de90f05f416b3b385ff1d989343005546a0032890';
@@ -591,7 +591,7 @@ describe('Transaction', function() {
             .change(changeAddress);
         }, 'disableIsFullySigned', errors.Transaction.MissingSignatures
       ));
-      it('can skip the check that avoids spending more digibytes than the inputs for a transaction', buildSkipTest(
+      it('can skip the check that avoids spending more buts than the inputs for a transaction', buildSkipTest(
         function(transaction) {
           return transaction
             .to(toAddress, 10000000000000)
@@ -612,7 +612,7 @@ describe('Transaction', function() {
           'script': testScript,
           'satoshis': testAmount
         })
-        .to('dgbt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', testAmount - 10000);
+        .to('butt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', testAmount - 10000);
 
       tx.outputs[0]._satoshis = 100;
       tx.outputs[0]._satoshisBN = new BN('fffffffffffffff', 16);
@@ -628,7 +628,7 @@ describe('Transaction', function() {
           'script': testScript,
           'satoshis': testAmount
         })
-        .to('dgbt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', testAmount - 10000);
+        .to('butt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', testAmount - 10000);
 
       tx.outputs[0]._satoshis = -100;
       tx.outputs[0]._satoshisBN = new BN(-100, 10);
@@ -645,7 +645,7 @@ describe('Transaction', function() {
           'script': testScript,
           'satoshis': testAmount
         })
-        .to('dgbt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', testAmount - 10000);
+        .to('butt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', testAmount - 10000);
 
       tx.toBuffer = sinon.stub().returns({
         length: 10000000
@@ -666,7 +666,7 @@ describe('Transaction', function() {
           'script': testScript,
           'satoshis': testAmount
         })
-        .to('dgbt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', testAmount - 10000);
+        .to('butt1qy265w5ntr6u08rnms5lr66khn39xzyv5wx8ata', testAmount - 10000);
 
       tx.isCoinbase = sinon.stub().returns(false);
       tx.inputs[0].isNull = sinon.stub().returns(true);
@@ -769,7 +769,7 @@ describe('Transaction', function() {
         outputIndex: 0,
         script: new Script()
       }), outputScriptString, 10000);
-      transaction.inputs[0].output.script.should.be.instanceof(digibyte.Script);
+      transaction.inputs[0].output.script.should.be.instanceof(but.Script);
       transaction.inputs[0].output.script.toString().should.equal(outputScriptString);
     });
   });

@@ -1194,7 +1194,7 @@ Asset.prototype.insertSatoshiToTransaction = function(utxos, tx, missing, inputs
             txid: utxo.txid,
             vout: utxo.index,
             scriptPubKey: utxo.scriptPubKey.hex,
-            amount: Unit.fromSatoshis(utxo.value).toDGB(),
+            amount: Unit.fromSatoshis(utxo.value).toBUT(),
           });
           tx.from(output);
           inputsValue.amount += utxo.value;
@@ -1637,9 +1637,9 @@ Asset.prototype.encodeDigiAssetScheme = function(tx) {
     });
   }
   if (this.flags && this.flags.splitChange && lastOutputValue >= 2 * Transaction.DUST_AMOUNT && coloredAmount > 0) {
-    var digibyteChange = lastOutputValue - Transaction.DUST_AMOUNT;
+    var butChange = lastOutputValue - Transaction.DUST_AMOUNT;
     lastOutputValue = Transaction.DUST_AMOUNT;
-    tx.addOutput(metadata.issueAddress, digibyteChange);
+    tx.addOutput(metadata.issueAddress, butChange);
   }
   if (coloredAmount > 0) {
     // there's a colored change output
@@ -2199,7 +2199,7 @@ var nDiffChangeTarget = 67200;
 var patchBlockRewardDuration = 10080;
 var patchBlockRewardDuration2 = 80160
 var alwaysUpdateDiffChangeTarget = 400000;
-var nSubsidy = Unit.fromSatoshis(1).toDGB();
+var nSubsidy = Unit.fromSatoshis(1).toBUT();
 
 /**
  * Instantiate a Block from a Buffer, JSON object, or Object with
@@ -2469,42 +2469,48 @@ Block.Values = {
   NULL_HASH: new Buffer('0000000000000000000000000000000000000000000000000000000000000000', 'hex')
 };
 
-Block.GetDGBSubsidy = function GetDGBSubsidy(height) {
-  var qSubsidy;
-  if (height < 400000) {
-    qSubsidy = Unit.fromDGB(8000).toSatoshis();
-    var blocks = height - nDiffChangeTarget;
-    var weeks = (blocks / patchBlockRewardDuration);
-    for (var i = 0; i < weeks; i++){
-      qSubsidy -= (qSubsidy/200);
-    }
-  } else {
-    qSubsidy = Unit.fromDGB(2484).toSatoshis();
-    var blocks = height - alwaysUpdateDiffChangeTarget;
-    var weeks = (blocks / patchBlockRewardDuration2) + 1;
-    for (var i = 0; i < weeks; i++) {
-      qSubsidy -= (qSubsidy/100)
-    }
-  }
+Block.GetBUTSubsidy = function GetBUTSubsidy(height) {
+  var qSubsidy=5000;
   return qSubsidy;
 };
    
 Block.getBlockValue = function getBlockValue(height) {
-  if (height < nDiffChangeTarget) {
-    nSubsidy = Unit.fromDGB(8000).toSatoshis();         
-    if(height < 1440) {
-      nSubsidy = Unit.fromDGB(72000).toSatoshis();
-    } else if(height < 5760) {
-      nSubsidy = Unit.fromDGB(16000).toSatoshis();
-    }
-  } else {
-    nSubsidy = Block.GetDGBSubsidy(height);
-  }
-                 
-  if(nSubsidy < Unit.fromDGB(1).toSatoshis()){
-    nSubsidy = Unit.fromDGB(1).toSatoshis();
-  }
-  return Unit.fromSatoshis(nSubsidy).toDGB();
+   var owlings = 21262;
+
+     int multiplier; // integer number of owlings
+     int tempHeight; // number of blocks since last anchor
+	if (height < 720) {
+	nSubsidy = Unit.fromBUT(4).toSatoshis()
+	} else if ( (height > 553531) && (height < 2105657) ){
+		tempHeight = nPrevHeight - 553532;
+		multiplier = tempHeight / owlings;
+                nSubsidy -= Unit.fromBUT(multiplier*10 +10).toSatoshis();
+	} else if ( (height > 2105657) && (height < 5273695) ) {
+		tempHeight = nPrevHeight - 2105658;
+                nSubsidy -= Unit.fromBUT(multiplier*20 +750).toSatoshis();
+	} else if ( (height > 5273695) && (height < 7378633) ) {
+		tempHeight = nPrevHeight - 5273696;
+		multiplier = tempHeight / owlings;
+                nSubsidy -= Unit.fromBUT(multiplier*10 +3720).toSatoshis();
+	} else if ( (height > 7378633) && (height < 8399209) ){
+		tempHeight = nPrevHeight - 7378634;
+		multiplier = tempHeight / owlings;
+                nSubsidy -= Unit.fromBUT(multiplier*5 +4705).toSatoshis();
+	} else if ( (height > 8399209) && (height < 14735285) ){
+                nSubsidy -= Unit.fromBUT(55).toSatoshis();
+	} else if ( (height > 14735285) && (height < 15798385) ){
+	   tempHeight = nPrevHeight - 14735286;
+	   multiplier = tempHeight / owlings;
+                nSubsidy -= Unit.fromBUT(multiplier +4946).toSatoshis();
+	} else if ( (height > 15798385) && (height < 25844304) ){
+		nSubsidy = 5;
+                nSubsidy -= Unit.fromBUT(5).toSatoshis();
+	} else if (height > 125844304) {
+                nSubsidy -= Unit.fromBUT( 0.001).toSatoshis();
+	}
+
+
+  return Unit.fromSatoshis(nSubsidy).toBUT();
 };
 
 module.exports = Block;
@@ -2523,7 +2529,7 @@ var Hash = require('../crypto/hash');
 var JSUtil = require('../util/js');
 var $ = require('../util/preconditions');
 
-var GENESIS_BITS = 0x1d00ffff;
+var GENESIS_BITS = 0x20001fff;
 
 /**
  * Instantiate a BlockHeader from a Buffer, JSON object, or Object with
@@ -4496,7 +4502,7 @@ Bech32.encode = function(buf, LIMIT, prefix) {
 
   LIMIT = LIMIT || 90;
   if (!prefix) {
-    prefix = 'dgb';
+    prefix = 'butk';
   }
   if ((prefix.length + 7 + buf.length) > LIMIT)
     throw new Error('Exceeds length limit');
@@ -5163,22 +5169,22 @@ var traverseRoot = function(parent, errorsDefinition) {
 };
 
 
-var digibyte = {};
-digibyte.Error = function() {
+var but = {};
+but.Error = function() {
   this.message = 'Internal error';
   this.stack = this.message + '\n' + (new Error()).stack;
 };
-digibyte.Error.prototype = Object.create(Error.prototype);
-digibyte.Error.prototype.name = 'digibyte.Error';
+but.Error.prototype = Object.create(Error.prototype);
+but.Error.prototype.name = 'but.Error';
 
 
 var data = require('./spec');
-traverseRoot(digibyte.Error, data);
+traverseRoot(but.Error, data);
 
-module.exports = digibyte.Error;
+module.exports = but.Error;
 
 module.exports.extend = function(spec) {
-  return traverseNode(digibyte.Error, spec);
+  return traverseNode(but.Error, spec);
 };
 
 },{"./spec":27,"lodash":174}],27:[function(require,module,exports){
@@ -6029,9 +6035,9 @@ var Network = require('./networks');
 var Point = require('./crypto/point');
 var PublicKey = require('./publickey');
 
-var digibyteErrors = require('./errors');
-var errors = digibyteErrors;
-var hdErrors = digibyteErrors.HDPublicKey;
+var butErrors = require('./errors');
+var errors = butErrors;
+var hdErrors = butErrors.HDPublicKey;
 var assert = require('assert');
 
 var JSUtil = require('./util/js');
@@ -6669,20 +6675,20 @@ function removeNetwork(network) {
 addNetwork({
   name: 'livenet',
   alias: 'mainnet',
-  prefix: 'dgb',
-  pubkeyhash: 0x1e,
-  privatekey: 0x80,
-  privatekeyOld: 0x9e,
-  scripthash: 0x3f,
-  scripthashTwo: 0x05,
+  prefix: 'butk',
+  pubkeyhash: 0x4c,
+  privatekey: 0xcc,
+  privatekeyOld: 0xcc,
+  scripthash: 0x10,
+  scripthashTwo: 0x10,
   xpubkey:  0x0488b21e,
   xprivkey: 0x0488ade4,
-  networkMagic: 0xfac3b6da,
-  port: 12024,
+  networkMagic: 0x5234662e,
+  port: 24240,
   dnsSeeds: [
-    'seed.digibyte.co',
-    'seed.digibyte.io',
-    'digiexplorer.info'
+    'seed1.butcoin.tech',
+    'seed.butcoin.tech',
+    'xplorer.butcoin.tech'
   ]
 });
 
@@ -6695,7 +6701,7 @@ var livenet = get('livenet');
 addNetwork({
   name: 'testnet',
   alias: 'regtest',
-  prefix: 'dgbt',
+  prefix: 'butt',
   pubkeyhash: 0x7e,
   privatekey: 0xfe,
   scripthash: 0x8c,
@@ -6715,7 +6721,7 @@ var TESTNET = {
   PORT: 12026,
   NETWORK_MAGIC: BufferUtil.integerAsBuffer(0xfdc8bddd),
   DNS_SEEDS: [
-    'testnet-1.us.digibyteservers.io'
+    'testnet-1.us.butservers.io'
   ]
 };
 
@@ -12446,7 +12452,7 @@ Transaction.DUST_AMOUNT = 546;
 Transaction.FEE_SECURITY_MARGIN = 150;
 
 // max amount of satoshis in circulation
-Transaction.MAX_MONEY = 210000000 * 1e8;
+Transaction.MAX_MONEY = 21000000000 * 1e8;
 
 // nlocktime limit to be considered block height rather than a timestamp
 Transaction.NLOCKTIME_BLOCKHEIGHT_LIMIT = 5e8;
@@ -13818,7 +13824,7 @@ var Unit = require('../unit');
  * @param {string|Script} data.scriptPubKey the script that must be resolved to release the funds
  * @param {string|Script=} data.script alias for `scriptPubKey`
  * @param {number} data.amount amount of bitcoins associated
- * @param {number=} data.satoshis alias for `amount`, but expressed in satoshis (1 DGB = 1e8 satoshis)
+ * @param {number=} data.satoshis alias for `amount`, but expressed in satoshis (1 BUT = 1e8 satoshis)
  * @param {string|Address=} data.address the associated address to the script, if provided
  */
 function UnspentOutput(data) {
@@ -13843,7 +13849,7 @@ function UnspentOutput(data) {
   var script = new Script(data.scriptPubKey || data.script);
   $.checkArgument(!_.isUndefined(data.amount) || !_.isUndefined(data.satoshis),
                   'Must provide an amount for the output');
-  var amount = !_.isUndefined(data.amount) ? new Unit.fromDGB(data.amount).toSatoshis() : data.satoshis;
+  var amount = !_.isUndefined(data.amount) ? new Unit.fromBUT(data.amount).toSatoshis() : data.satoshis;
   $.checkArgument(_.isNumber(amount), 'Amount must be a number');
   JSUtil.defineImmutable(this, {
     address: address,
@@ -13890,7 +13896,7 @@ UnspentOutput.prototype.toObject = UnspentOutput.prototype.toJSON = function toO
     txid: this.txId,
     vout: this.outputIndex,
     scriptPubKey: this.script.toBuffer().toString('hex'),
-    amount: Unit.fromSatoshis(this.satoshis).toDGB()
+    amount: Unit.fromSatoshis(this.satoshis).toBUT()
   };
 };
 
@@ -13905,30 +13911,30 @@ var errors = require('./errors');
 var $ = require('./util/preconditions');
 
 var UNITS = {
-  'DGB'      : [1e8, 8],
-  'mDGB'     : [1e5, 5],
-  'uDGB'     : [1e2, 2],
+  'BUT'      : [1e8, 8],
+  'mBUT'     : [1e5, 5],
+  'uBUT'     : [1e2, 2],
   'bits'     : [1e2, 2],
   'satoshis' : [1, 0]
 };
 
 /**
  * Utility for handling and converting bitcoins units. The supported units are
- * DGB, mDGB, bits (also named uDGB) and satoshis. A unit instance can be created with an
- * amount and a unit code, or alternatively using static methods like {fromDGB}.
+ * BUT, mBUT, bits (also named uBUT) and satoshis. A unit instance can be created with an
+ * amount and a unit code, or alternatively using static methods like {fromBUT}.
  * It also allows to be created from a fiat amount and the exchange rate, or
  * alternatively using the {fromFiat} static method.
  * You can consult for different representation of a unit instance using it's
  * {to} method, the fixed unit methods like {toSatoshis} or alternatively using
  * the unit accessors. It also can be converted to a fiat amount by providing the
- * corresponding DGB/fiat exchange rate.
+ * corresponding BUT/fiat exchange rate.
  *
  * @example
  * ```javascript
- * var sats = Unit.fromDGB(1.3).toSatoshis();
- * var mili = Unit.fromBits(1.3).to(Unit.mDGB);
+ * var sats = Unit.fromBUT(1.3).toSatoshis();
+ * var mili = Unit.fromBits(1.3).to(Unit.mBUT);
  * var bits = Unit.fromFiat(1.3, 350).bits;
- * var dgb = new Unit(1.3, Unit.bits).DGB;
+ * var but = new Unit(1.3, Unit.bits).BUT;
  * ```
  *
  * @param {Number} amount - The amount to be represented
@@ -13941,13 +13947,13 @@ function Unit(amount, code) {
     return new Unit(amount, code);
   }
 
-  // convert fiat to DGB
+  // convert fiat to BUT
   if (_.isNumber(code)) {
     if (code <= 0) {
       throw new errors.Unit.InvalidRate(code);
     }
     amount = amount / code;
-    code = Unit.DGB;
+    code = Unit.BUT;
   }
 
   this._value = this._from(amount, code);
@@ -13979,23 +13985,23 @@ Unit.fromObject = function fromObject(data){
 };
 
 /**
- * Returns a Unit instance created from an amount in DGB
+ * Returns a Unit instance created from an amount in BUT
  *
- * @param {Number} amount - The amount in DGB
+ * @param {Number} amount - The amount in BUT
  * @returns {Unit} A Unit instance
  */
-Unit.fromDGB = function(amount) {
-  return new Unit(amount, Unit.DGB);
+Unit.fromBUT = function(amount) {
+  return new Unit(amount, Unit.BUT);
 };
 
 /**
- * Returns a Unit instance created from an amount in mDGB
+ * Returns a Unit instance created from an amount in mBUT
  *
- * @param {Number} amount - The amount in mDGB
+ * @param {Number} amount - The amount in mBUT
  * @returns {Unit} A Unit instance
  */
 Unit.fromMillis = Unit.fromMilis = function(amount) {
-  return new Unit(amount, Unit.mDGB);
+  return new Unit(amount, Unit.mBUT);
 };
 
 /**
@@ -14022,7 +14028,7 @@ Unit.fromSatoshis = function(amount) {
  * Returns a Unit instance created from a fiat amount and exchange rate.
  *
  * @param {Number} amount - The amount in fiat
- * @param {Number} rate - The exchange rate DGB/fiat
+ * @param {Number} rate - The exchange rate BUT/fiat
  * @returns {Unit} A Unit instance
  */
 Unit.fromFiat = function(amount, rate) {
@@ -14047,7 +14053,7 @@ Unit.prototype.to = function(code) {
     if (code <= 0) {
       throw new errors.Unit.InvalidRate(code);
     }
-    return parseFloat((this.DGB * code).toFixed(2));
+    return parseFloat((this.BUT * code).toFixed(2));
   }
 
   if (!UNITS[code]) {
@@ -14059,21 +14065,21 @@ Unit.prototype.to = function(code) {
 };
 
 /**
- * Returns the value represented in DGB
+ * Returns the value represented in BUT
  *
- * @returns {Number} The value converted to DGB
+ * @returns {Number} The value converted to BUT
  */
-Unit.prototype.toDGB = function() {
-  return this.to(Unit.DGB);
+Unit.prototype.toBUT = function() {
+  return this.to(Unit.BUT);
 };
 
 /**
- * Returns the value represented in mDGB
+ * Returns the value represented in mBUT
  *
- * @returns {Number} The value converted to mDGB
+ * @returns {Number} The value converted to mBUT
  */
 Unit.prototype.toMillis = Unit.prototype.toMilis = function() {
-  return this.to(Unit.mDGB);
+  return this.to(Unit.mBUT);
 };
 
 /**
@@ -14097,7 +14103,7 @@ Unit.prototype.toSatoshis = function() {
 /**
  * Returns the value represented in fiat
  *
- * @param {string} rate - The exchange rate between DGB/currency
+ * @param {string} rate - The exchange rate between BUT/currency
  * @returns {Number} The value converted to satoshis
  */
 Unit.prototype.atRate = function(rate) {
@@ -14120,8 +14126,8 @@ Unit.prototype.toString = function() {
  */
 Unit.prototype.toObject = Unit.prototype.toJSON = function toObject() {
   return {
-    amount: this.DGB,
-    code: Unit.DGB
+    amount: this.BUT,
+    code: Unit.BUT
   };
 };
 
@@ -14249,7 +14255,7 @@ URI.isValid = function(arg, knownParams) {
 URI.parse = function(uri) {
   var info = URL.parse(uri, true);
 
-  if (info.protocol !== 'digibyte:') {
+  if (info.protocol !== 'but:') {
     throw new TypeError('Invalid bitcoin URI');
   }
 
@@ -14296,9 +14302,9 @@ URI.prototype._fromObject = function(obj) {
 };
 
 /**
- * Internal function to transform a DGB string amount into satoshis
+ * Internal function to transform a BUT string amount into satoshis
  *
- * @param {string} amount - Amount DGB string
+ * @param {string} amount - Amount BUT string
  * @throws {TypeError} Invalid amount
  * @returns {Object} Amount represented in satoshis
  */
@@ -14307,7 +14313,7 @@ URI.prototype._parseAmount = function(amount) {
   if (isNaN(amount)) {
     throw new TypeError('Invalid amount');
   }
-  return Unit.fromDGB(amount).toSatoshis();
+  return Unit.fromBUT(amount).toSatoshis();
 };
 
 URI.prototype.toObject = URI.prototype.toJSON = function toObject() {
@@ -14330,7 +14336,7 @@ URI.prototype.toObject = URI.prototype.toJSON = function toObject() {
 URI.prototype.toString = function() {
   var query = {};
   if (this.amount) {
-    query.amount = Unit.fromSatoshis(this.amount).toDGB();
+    query.amount = Unit.fromSatoshis(this.amount).toBUT();
   }
   if (this.message) {
     query.message = this.message;
@@ -14344,7 +14350,7 @@ URI.prototype.toString = function() {
   _.extend(query, this.extras);
 
   return URL.format({
-    protocol: 'digibyte:',
+    protocol: 'but:',
     host: this.address,
     query: query
   });
@@ -31549,7 +31555,7 @@ module.exports={
   "_args": [
     [
       "elliptic@6.4.0",
-      "E:\\developer\\digibyte\\digibyte-js"
+      "E:\\developer\\but\\but-js"
     ]
   ],
   "_from": "elliptic@6.4.0",
@@ -31575,7 +31581,7 @@ module.exports={
   ],
   "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz",
   "_spec": "6.4.0",
-  "_where": "E:\\developer\\digibyte\\digibyte-js",
+  "_where": "E:\\developer\\but\\but-js",
   "author": {
     "name": "Fedor Indutny",
     "email": "fedor@indutny.com"
@@ -61929,10 +61935,10 @@ exports.createContext = Script.createContext = function (context) {
 
 },{"indexof":170}],255:[function(require,module,exports){
 module.exports={
-  "name": "digibyte",
+  "name": "but",
   "version": "0.15.6",
-  "description": "A pure and powerful JavaScript DigiByte library.",
-  "author": "DigiByte <dev@digibyte.co>",
+  "description": "A pure and powerful JavaScript Butk library.",
+  "author": "Butk <dev@butcoin.tech>",
   "main": "index.js",
   "scripts": {
     "lint": "gulp lint",
@@ -61988,7 +61994,7 @@ module.exports={
   ],
   "keywords": [
     "bitcoin",
-    "digibyte",
+    "but",
     "transaction",
     "address",
     "p2p",
@@ -62005,7 +62011,7 @@ module.exports={
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/digicontributer/digibyte-js.git"
+    "url": "https://github.com/ButKoin/but-js.git"
   },
   "browser": {
     "request": "browser-request"
@@ -62020,7 +62026,7 @@ module.exports={
     "sffc-encoder": "^0.1.9"
   },
   "devDependencies": {
-    "digibyte-build": "digibyte-core/digibyte-build",
+    "but-build": "ButKoin/but-build",
     "brfs": "^1.2.0",
     "chai": "^1.10.0",
     "gulp": "^3.8.10",

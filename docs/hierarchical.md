@@ -10,8 +10,8 @@ An instance of a [PrivateKey](privatekey.md) that also contains information requ
 Sample usage:
 
 ```javascript
-var digibyte = require('digibyte');
-var HDPrivateKey = digibyte.HDPrivateKey;
+var but = require('but');
+var HDPrivateKey = but.HDPrivateKey;
 
 var hdPrivateKey = new HDPrivateKey();
 var retrieved = new HDPrivateKey('xpriv...');
